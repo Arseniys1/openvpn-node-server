@@ -23,28 +23,43 @@ io.on('connection', function(client) {
         client.disconnect();
     }
 
+    var ip = client.request.connection.remoteAddress;
     var token = client.handshake.headers['token'];
 
+    ip = '127.0.0.1';
+
     axios.post(getServiceUrl() + '/connect', {
-        ip: client.request.connection.remoteAddress,
+        ip: ip,
         token: token
     }).then(function(res) {
-        console.log(res);
+        if (res.status === 200 && res.data.ok === true) {
+            console.log(`Success Auth: ${ip}`)
+        } else {
+            console.log(`Error: ${res.data.message}`);
+            client.disconnect();
+        }
     }).catch(function(error) {
-        //client.disconnect();
+        console.log(`Error: ${error.response.status}`);
+        client.disconnect();
     });
 
-    client.on('.CreateAccess', function(data) {
-        axios.post(getServiceUrl() + '/create-access', data);
+    client.on('CreateAccess', function(data) {
+        axios.post(getServiceUrl() + '/create-access', {
+            ip: ip,
+            data: JSON.stringify(data),
+        });
     });
 
-    client.on('.DeleteAccess', function(data) {
-        axios.post(getServiceUrl() + '/delete-access', data);
+    client.on('DeleteAccess', function(data) {
+        axios.post(getServiceUrl() + '/delete-access', {
+            ip: ip,
+            data: JSON.stringify(data),
+        });
     });
 
     client.on('disconnect', function() {
         axios.post(getServiceUrl() + '/disconnect', {
-            ip: client.request.connection.remoteAddress
+            ip: ip,
         });
     });
 });
@@ -58,11 +73,13 @@ sub.on('message', function(channel, message) {
         return;
     }
 
-    var client = findClientByIp(message.ip);
+    //var client = findClientByIp(message.data.ip);
+    var client = findClientByIp('::ffff:127.0.0.1');
 
     if (client === undefined) {
         axios.post(getServiceUrl() + '/not-connected', {
-            ip: message.ip
+            ip: message.data.ip,
+            data: JSON.stringify(message),
         });
 
         return;

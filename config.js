@@ -1,7 +1,7 @@
 module.exports = {
     service: {
-        token: '',
-        url: `https://cp.siberia-vpn.com/api/echo/`,
+        token: '1',
+        url: `http://localhost:8000/api/echo/`,
     },
 
     redis: {
