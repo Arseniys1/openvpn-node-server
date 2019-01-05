@@ -26,7 +26,7 @@ io.on('connection', function(client) {
     var ip = client.request.connection.remoteAddress;
     var token = client.handshake.headers['token'];
 
-    ip = '127.0.0.1';
+    if (config.debug) ip = '127.0.0.1';
 
     axios.post(getServiceUrl() + '/connect', {
         ip: ip,
@@ -65,7 +65,7 @@ io.on('connection', function(client) {
 });
 
 sub.on('message', function(channel, message) {
-    console.log(channel, message);
+    if (config.debug) console.log(channel, message);
 
     try {
         message = JSON.parse(message);
@@ -73,8 +73,11 @@ sub.on('message', function(channel, message) {
         return;
     }
 
-    //var client = findClientByIp(message.data.ip);
-    var client = findClientByIp('::ffff:127.0.0.1');
+    if (config.debug) {
+        var client = findClientByIp('::ffff:127.0.0.1');
+    } else {
+        var client = findClientByIp(message.data.ip);
+    }
 
     if (client === undefined) {
         axios.post(getServiceUrl() + '/not-connected', {

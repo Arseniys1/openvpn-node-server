@@ -1,4 +1,6 @@
 module.exports = {
+    debug: true,
+
     service: {
         token: '1',
         url: `http://localhost:8000/api/echo/`,
