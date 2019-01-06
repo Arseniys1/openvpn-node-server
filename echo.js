@@ -80,7 +80,7 @@ sub.on('message', function(channel, message) {
 
     if (client === undefined) {
         axios.post(getServiceUrl() + '/not-connected', {
-            ip: client.request.connection.remoteAddress.substr(7),
+            ip: message.data.ip,
             data: JSON.stringify(message),
         });
 
