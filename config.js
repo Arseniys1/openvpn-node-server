@@ -12,6 +12,6 @@ module.exports = {
     },
 
     io: {
-        port: 3000,
+        port: 3030,
     }
 };

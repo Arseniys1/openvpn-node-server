@@ -1,5 +1,5 @@
 var config = require('./config');
-var io = require('socket.io')();
+var io = require('socket.io')(config.io.port);
 var axios = require('axios');
 var redis = require("redis"),
     pub = redis.createClient({host: config.redis.host, port: config.redis.port}),
