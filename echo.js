@@ -7,7 +7,7 @@ var redis = require("redis"),
 
 function findClientByIp(address) {
     address = '::ffff:' + address;
-    
+
     for(var sockId in io.sockets.sockets) {
         var socket = io.sockets.sockets[sockId];
         var remoteAddress = socket.request.connection.remoteAddress;
@@ -80,7 +80,7 @@ sub.on('message', function(channel, message) {
 
     if (client === undefined) {
         axios.post(getServiceUrl() + '/not-connected', {
-            ip: message.data.ip,
+            ip: client.request.connection.remoteAddress.substr(7),
             data: JSON.stringify(message),
         });
 
