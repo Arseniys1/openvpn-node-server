@@ -3,7 +3,7 @@ module.exports = {
 
     service: {
         token: '1',
-        url: `http://localhost:8000/api/echo/`,
+        url: 'http://localhost:8000/api/echo/',
     },
 
     redis: {
